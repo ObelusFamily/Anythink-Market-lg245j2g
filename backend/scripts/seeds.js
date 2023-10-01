@@ -135,7 +135,9 @@ async function seedUsers() {
         }
     }
 
-    printReadline();
+    if (process.argv[2] === '--user-input') {
+        printReadline();
+    }
 }
 
 async function clearDb() {
@@ -144,7 +146,9 @@ async function clearDb() {
     await Item.deleteMany({ title: { $ne: 'My first item' } });
     await User.deleteMany({ username: { $ne: 'felipeam' } });
     console.log('db cleared successfully!');
-    setTimeout(() => printReadline(), 1500);
+    if (process.argv[2] === '--user-input') {
+        setTimeout(() => printReadline(), 1500);
+    }
 }
 
 async function countDocs() {
@@ -158,9 +162,17 @@ async function countDocs() {
     users: ${totalUsers}
     items: ${totalItems}
     comments: ${totalComments}\n\n`);
-    setTimeout(() => printReadline(), 1500);
+    if (process.argv[2] === '--user-input') {
+        setTimeout(() => printReadline(), 1500);
+    }
 }
 
 mongoose.connection.on('connected', () => {
-    setTimeout(() => printReadline(), 1500);
+    if (process.argv[2] === '--user-input') {
+        setTimeout(() => printReadline(), 1500);
+    } else {
+        seedUsers().then(() => {
+            process.exit();
+        });
+    }
 });
